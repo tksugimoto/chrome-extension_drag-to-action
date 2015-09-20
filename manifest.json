@@ -1,0 +1,31 @@
+{
+	"name": "テキストを選択→ドラッグで検索",
+	"version": "0.1",
+	"manifest_version": 2,
+
+	"description": "",
+
+	"icons": {
+		"128": "icon/icon.png"
+	},
+	"permissions": [
+			
+	],
+
+	"background": {
+		"scripts": [
+			"background.js"
+		]
+	},
+
+	"content_scripts": [
+		{
+			"matches": [
+				"*://*/*"
+			],
+			"js": [
+				"content_script.js"
+			]
+		}
+	]
+}
