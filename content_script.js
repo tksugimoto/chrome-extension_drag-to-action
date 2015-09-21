@@ -17,15 +17,15 @@ document.body.addEventListener("dragend", function (evt) {
 			// 下へ動いた
 			if ((movedDistanceToRight > 0) && (movedDistanceToRight > movedDistanceToBottom)) {
 				// 右へ動いた かつ 右の方へ大きく動いた
-				send("copy", slectedText);
+				action("copy", slectedText);
 			} else {
-				send("search", slectedText);
+				action("search", slectedText);
 			}
 		}
 	}
 });
 
-function send(method, text) {
+function action(method, text) {
 	chrome.runtime.sendMessage({
 		method: method,
 		text: text
