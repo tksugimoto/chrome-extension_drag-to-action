@@ -14,7 +14,7 @@
 
 	"background": {
 		"scripts": [
-			"background.js"
+			"textDrag2Action.js"
 		]
 	},
 
@@ -24,7 +24,7 @@
 				"*://*/*"
 			],
 			"js": [
-				"content_script.js"
+				"textDrag2Action.js"
 			]
 		}
 	]
