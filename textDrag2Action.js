@@ -4,7 +4,7 @@
 	
 */
 (function () {
-	var slectedText = null;
+	var slectedText = "";
 	var startPositionX = 0;
 	var startPositionY = 0;
 
@@ -15,7 +15,7 @@
 	});
 
 	document.body.addEventListener("dragend", function (evt) {
-		if (slectedText === window.getSelection().toString()) {
+		if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
 			var movedDistanceToRight = evt.screenX - startPositionX;
 			var movedDistanceToBottom = evt.screenY - startPositionY;
 			if (movedDistanceToBottom > 0) {
