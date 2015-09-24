@@ -11,8 +11,8 @@
 				search(request.text, sender.tab.id);
 			} else if (request.method === "copy") {
 				copy(request.text);
-			} else if (method === "open") {
-				open(request.text);
+			} else if (request.method === "open") {
+				open(request.text, sender.tab.id);
 			}
 		});
 	} else {
