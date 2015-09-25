@@ -29,20 +29,27 @@
 		document.body.addEventListener("dragend", function (evt) {
 			var movedDistanceToRight = evt.screenX - startPositionX;
 			var movedDistanceToBottom = evt.screenY - startPositionY;
-			if (movedDistanceToBottom > 0) {
-				// 下へ動いた
-				if ((movedDistanceToRight > 0) && (movedDistanceToRight > movedDistanceToBottom)) {
-					// 右へ動いた かつ 右の方へ大きく動いた
-					if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
-						action("copy", slectedText);
-					} else if (evt.target.tagName === "A") {
-						action("copy", evt.target.href);
-					}
-				} else {
+			
+			var movedHorizontalDistance = Math.abs(movedDistanceToRight);
+			var movedVerticalDistance = Math.abs(movedDistanceToBottom);
+			
+			if (movedVerticalDistance > movedHorizontalDistance) {
+				// （水平方向より）垂直方向へ大きく動いた
+				if (movedDistanceToBottom > 0) {
+					// 下へ動いた
 					if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
 						action("search", slectedText);
 					} else if (evt.target.tagName === "A") {
 						action("open", evt.target.href);
+					}
+				}
+			} else {
+				if (movedDistanceToRight > 0) {
+					// 右へ動いた
+					if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
+						action("copy", slectedText);
+					} else if (evt.target.tagName === "A") {
+						action("copy", evt.target.href);
 					}
 				}
 			}
