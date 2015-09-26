@@ -41,6 +41,8 @@
 						action("search", slectedText);
 					} else if (evt.target.tagName === "A") {
 						action("open", evt.target.href);
+					} else if (evt.target.tagName === "IMG") {
+						action("open", evt.target.src);
 					}
 				}
 			} else {
@@ -50,6 +52,8 @@
 						action("copy", slectedText);
 					} else if (evt.target.tagName === "A") {
 						action("copy", evt.target.href);
+					} else if (evt.target.tagName === "IMG") {
+						action("copy", evt.target.src);
 					}
 				}
 			}
