@@ -37,23 +37,23 @@
 				// （水平方向より）垂直方向へ大きく動いた
 				if (movedDistanceToBottom > 0) {
 					// 下へ動いた
-					if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
-						action("search", slectedText);
-					} else if (evt.target.tagName === "A") {
+					if (evt.target.tagName === "A") {
 						action("open", evt.target.href);
 					} else if (evt.target.tagName === "IMG") {
 						action("open", evt.target.src);
+					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
+						action("search", slectedText);
 					}
 				}
 			} else {
 				if (movedDistanceToRight > 0) {
 					// 右へ動いた
-					if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
-						action("copy", slectedText);
-					} else if (evt.target.tagName === "A") {
+					if (evt.target.tagName === "A") {
 						action("copy", evt.target.href);
 					} else if (evt.target.tagName === "IMG") {
 						action("copy", evt.target.src);
+					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
+						action("copy", slectedText);
 					}
 				}
 			}
