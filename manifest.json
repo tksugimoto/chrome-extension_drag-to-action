@@ -25,7 +25,8 @@
 			],
 			"js": [
 				"textDrag2Action.js"
-			]
+			],
+			"all_frames": true
 		}
 	]
 }
