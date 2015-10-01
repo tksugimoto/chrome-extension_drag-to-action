@@ -40,7 +40,8 @@
 					if (evt.target.tagName === "A") {
 						action("open", evt.target.href);
 					} else if (evt.target.tagName === "IMG") {
-						action("open", evt.target.src);
+						if (evt.target.parentNode.tagName === "A") action("open", evt.target.parentNode.href);
+						else action("open", evt.target.src);
 					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
 						action("search", slectedText);
 					}
@@ -51,7 +52,8 @@
 					if (evt.target.tagName === "A") {
 						action("copy", evt.target.href);
 					} else if (evt.target.tagName === "IMG") {
-						action("copy", evt.target.src);
+						if (evt.target.parentNode.tagName === "A") action("copy", evt.target.parentNode.href);
+						else action("copy", evt.target.src);
 					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
 						action("copy", slectedText);
 					}
