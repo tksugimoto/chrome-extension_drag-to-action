@@ -94,7 +94,7 @@
 			open(url, tabId);
 		}
 		function open(url, tabId) {
-			if (typeof tabId === "undefined") {
+			if (typeof tabId !== "number") {
 				chrome.tabs.getCurrent(function (tab) {
 					chrome.tabs.create({
 						url: url,
