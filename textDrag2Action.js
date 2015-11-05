@@ -37,11 +37,11 @@
 				// （水平方向より）垂直方向へ大きく動いた
 				if (movedDistanceToBottom > 0) {
 					// 下へ動いた
-					if (evt.target.tagName === "A") {
-						action("open", evt.target.href);
+					var anchor = getAnchor(evt.target);
+					if (anchor) {
+						action("open", anchor.href);
 					} else if (evt.target.tagName === "IMG") {
-						if (evt.target.parentNode.tagName === "A") action("open", evt.target.parentNode.href);
-						else action("open", evt.target.src);
+						action("open", evt.target.src);
 					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
 						action("search", slectedText);
 					}
@@ -49,17 +49,27 @@
 			} else {
 				if (movedDistanceToRight > 0) {
 					// 右へ動いた
-					if (evt.target.tagName === "A") {
-						action("copy", evt.target.href);
+					var anchor = getAnchor(evt.target);
+					if (anchor) {
+						action("copy", anchor.href);
 					} else if (evt.target.tagName === "IMG") {
-						if (evt.target.parentNode.tagName === "A") action("copy", evt.target.parentNode.href);
-						else action("copy", evt.target.src);
+						action("copy", evt.target.src);
 					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
 						action("copy", slectedText);
 					}
 				}
 			}
 		});
+
+		function getAnchor(elem) {
+			while(elem.parentNode) {
+				if (elem.tagName === "A") {
+					return elem;
+				}
+				elem = elem.parentNode;
+			}
+			return null;
+		}
 
 		function action(method, text) {
 			if (inChromeExtension) {
