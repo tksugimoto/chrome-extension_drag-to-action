@@ -37,8 +37,11 @@
 				// （水平方向より）垂直方向へ大きく動いた
 				if (movedDistanceToBottom > 0) {
 					// 下へ動いた
-					var anchor = getAnchor(evt.target);
-					if (anchor) {
+					var anchor;
+					if (evt.target instanceof Text) {
+						// <a>内を選択して選択部分をドラッグした場合、targetはTextのNodeになる
+						action("search", slectedText);
+					} else if (anchor = getAnchor(evt.target)) {
 						action("open", anchor.href);
 					} else if (evt.target.tagName === "IMG") {
 						action("open", evt.target.src);
@@ -49,8 +52,10 @@
 			} else {
 				if (movedDistanceToRight > 0) {
 					// 右へ動いた
-					var anchor = getAnchor(evt.target);
-					if (anchor) {
+					var anchor;
+					if (evt.target instanceof Text) {
+						action("copy", slectedText);
+					} else if (anchor = getAnchor(evt.target)) {
 						action("copy", anchor.href);
 					} else if (evt.target.tagName === "IMG") {
 						action("copy", evt.target.src);
