@@ -50,7 +50,7 @@
 						action("open", anchor.href);
 					} else if (target.tagName === "IMG") {
 						action("open", target.src);
-					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
+					} else if (/\S/.test(slectedText)) {
 						action("search", slectedText);
 					}
 				}
@@ -65,7 +65,7 @@
 						action("copy", anchor.href);
 					} else if (target.tagName === "IMG") {
 						action("copy", target.src);
-					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
+					} else if (/\S/.test(slectedText)) {
 						action("copy", slectedText);
 					}
 				}
