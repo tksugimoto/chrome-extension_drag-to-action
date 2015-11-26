@@ -37,14 +37,15 @@
 				// （水平方向より）垂直方向へ大きく動いた
 				if (movedDistanceToBottom > 0) {
 					// 下へ動いた
+					var target = evt.target;
 					var anchor;
-					if (evt.target instanceof Text) {
+					if (target instanceof Text) {
 						// <a>内を選択して選択部分をドラッグした場合、targetはTextのNodeになる
 						action("search", slectedText);
-					} else if (anchor = getAnchor(evt.target)) {
+					} else if (anchor = getAnchor(target)) {
 						action("open", anchor.href);
-					} else if (evt.target.tagName === "IMG") {
-						action("open", evt.target.src);
+					} else if (target.tagName === "IMG") {
+						action("open", target.src);
 					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
 						action("search", slectedText);
 					}
@@ -52,13 +53,14 @@
 			} else {
 				if (movedDistanceToRight > 0) {
 					// 右へ動いた
+					var target = evt.target;
 					var anchor;
-					if (evt.target instanceof Text) {
+					if (target instanceof Text) {
 						action("copy", slectedText);
-					} else if (anchor = getAnchor(evt.target)) {
+					} else if (anchor = getAnchor(target)) {
 						action("copy", anchor.href);
-					} else if (evt.target.tagName === "IMG") {
-						action("copy", evt.target.src);
+					} else if (target.tagName === "IMG") {
+						action("copy", target.src);
 					} else if (/\S/.test(slectedText) && slectedText === window.getSelection().toString()) {
 						action("copy", slectedText);
 					}
