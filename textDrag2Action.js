@@ -20,6 +20,10 @@
 		var startPositionX = 0;
 		var startPositionY = 0;
 
+		document.body.addEventListener("dragover", function (evt) {
+			evt.preventDefault();
+		});
+
 		document.body.addEventListener("dragstart", function (evt) {
 			slectedText = window.getSelection().toString();
 			startPositionX = evt.screenX;
