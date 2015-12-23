@@ -15,6 +15,21 @@
 				open(request.text, sender.tab.id);
 			}
 		});
+		// 読み込み/更新時に既存のタブで実行する
+		chrome.tabs.query({
+			url: "*://*/*"
+		}, function(result){
+			result.forEach(function (tab){
+				chrome.tabs.executeScript(tab.id, {
+					file: "textDrag2Action.js",
+					allFrames: true
+				}, function (result) {
+					if (typeof result === "undefined") {
+						console.info("ページが読み込まれていません", tab);
+					}
+				});
+			});
+		});
 	} else {
 		var slectedText = "";
 		var startPositionX = 0;
@@ -92,10 +107,13 @@
 					open(text);
 				}
 			} else {
-				chrome.runtime.sendMessage({
-					method: method,
-					text: text
-				});
+				// 拡張が再読み込みされた場合エラーになるので捕捉
+				try {
+					chrome.runtime.sendMessage({
+						method: method,
+						text: text
+					});
+				} catch (e) {}
 			}
 		}
 	}
