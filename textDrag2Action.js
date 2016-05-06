@@ -28,6 +28,11 @@
 				}, function (result) {
 					if (typeof result === "undefined") {
 						console.info("ページが読み込まれていません", tab);
+					} else {
+						chrome.tabs.insertCSS(tab.id, {
+							file: "textDrag2Action.css",
+							allFrames: true
+						})
 					}
 				});
 			});
