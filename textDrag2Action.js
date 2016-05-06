@@ -13,6 +13,8 @@
 				copy(request.text);
 			} else if (request.method === "open") {
 				open(request.text, sender.tab.id);
+			} else if (request.method === "open-background") {
+				open(request.text, sender.tab.id, /* active = */ false);
 			}
 		});
 		// 読み込み/更新時に既存のタブで実行する
@@ -54,10 +56,10 @@
 			
 			if (movedVerticalDistance > movedHorizontalDistance) {
 				// （水平方向より）垂直方向へ大きく動いた
+				var target = evt.target;
+				var anchor;
 				if (movedDistanceToBottom > 0) {
 					// 下へ動いた
-					var target = evt.target;
-					var anchor;
 					if (target instanceof Text) {
 						// <a>内を選択して選択部分をドラッグした場合、targetはTextのNodeになる
 						action("search", slectedText);
@@ -67,6 +69,11 @@
 						action("open", target.src);
 					} else if (/\S/.test(slectedText)) {
 						action("search", slectedText);
+					}
+				} else {
+					// 上へ動いた
+					if (anchor = getAnchor(target)) {
+						action("open-background", anchor.href);
 					}
 				}
 			} else {
@@ -105,6 +112,8 @@
 					copy(text);
 				} else if (method === "open") {
 					open(text);
+				} else if (method === "open-background") {
+					open(text, null, /* active = */ false);
 				}
 			} else {
 				// 拡張が再読み込みされた場合エラーになるので捕捉
@@ -122,17 +131,19 @@
 			var url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
 			open(url, tabId);
 		}
-		function open(url, tabId) {
+		function open(url, tabId, active = true) {
 			if (typeof tabId !== "number") {
 				chrome.tabs.getCurrent(function (tab) {
 					chrome.tabs.create({
 						url: url,
+						active: !!active,
 						openerTabId: tab.id
 					});
 				});
 			} else {
 				chrome.tabs.create({
 					url: url,
+					active: !!active,
 					openerTabId: tabId
 				});
 			}
