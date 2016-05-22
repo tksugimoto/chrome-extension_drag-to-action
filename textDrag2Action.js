@@ -42,17 +42,17 @@
 		var startPositionX = 0;
 		var startPositionY = 0;
 
-		document.body.addEventListener("dragover", function (evt) {
+		document.addEventListener("dragover", function (evt) {
 			evt.preventDefault();
 		});
 
-		document.body.addEventListener("dragstart", function (evt) {
+		document.addEventListener("dragstart", function (evt) {
 			slectedText = window.getSelection().toString();
 			startPositionX = evt.screenX;
 			startPositionY = evt.screenY;
 		});
 
-		document.body.addEventListener("dragend", function (evt) {
+		document.addEventListener("dragend", function (evt) {
 			var movedDistanceToRight = evt.screenX - startPositionX;
 			var movedDistanceToBottom = evt.screenY - startPositionY;
 			
