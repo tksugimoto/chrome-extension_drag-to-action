@@ -9,6 +9,7 @@
 		"128": "icon/icon.png"
 	},
 	"permissions": [
+		"file:///*",
 		"*://*/*",
 		"tabs"
 	],
@@ -22,6 +23,7 @@
 	"content_scripts": [
 		{
 			"matches": [
+				"file:///*",
 				"*://*/*"
 			],
 			"js": [

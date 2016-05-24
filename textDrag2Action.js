@@ -19,7 +19,10 @@
 		});
 		// 読み込み/更新時に既存のタブで実行する
 		chrome.tabs.query({
-			url: "*://*/*"
+			url: [
+				"file:///*",
+				"*://*/*"
+			]
 		}, function(result){
 			result.forEach(function (tab){
 				chrome.tabs.executeScript(tab.id, {
