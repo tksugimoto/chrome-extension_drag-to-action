@@ -171,7 +171,7 @@
 				title: "コピー完了",
 				message: text,
 				type: "basic",
-				iconUrl: "icon/icon.png"
+				iconUrl: "/icon/icon.png"
 			});
 		}
 		chrome.notifications.onClicked.addListener(notificationId => {
