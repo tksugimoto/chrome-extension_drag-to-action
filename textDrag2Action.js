@@ -166,6 +166,16 @@
 			textarea.value = text;
 			textarea.select();
 			document.execCommand("copy");
+
+			chrome.notifications.create({
+				title: "コピー完了",
+				message: text,
+				type: "basic",
+				iconUrl: "icon/icon.png"
+			});
 		}
+		chrome.notifications.onClicked.addListener(notificationId => {
+			chrome.notifications.clear(notificationId);
+		});
 	}
 })();
