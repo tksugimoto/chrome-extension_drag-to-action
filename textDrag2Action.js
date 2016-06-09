@@ -68,6 +68,7 @@
 				var anchor;
 				if (movedDistanceToBottom > 0) {
 					// 下へ動いた
+					if (movedDistanceToBottom < 50) return;
 					if (target instanceof Text) {
 						// <a>内を選択して選択部分をドラッグした場合、targetはTextのNodeになる
 						action("search", slectedText);
@@ -87,6 +88,7 @@
 			} else {
 				if (movedDistanceToRight > 0) {
 					// 右へ動いた
+					if (movedDistanceToRight < 50) return;
 					var target = evt.target;
 					var anchor;
 					if (target instanceof Text) {
