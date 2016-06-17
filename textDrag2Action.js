@@ -96,6 +96,10 @@
 					} else if (anchor = getAnchor(target)) {
 						action("copy", anchor.href);
 					} else if (target.tagName === "IMG") {
+						if (target.src.startsWith("data:image/")) {
+							// Data URIは長すぎてコピーすると重いので何もしない
+							return;
+						}
 						action("copy", target.src);
 					} else if (/\S/.test(slectedText)) {
 						action("copy", slectedText);
