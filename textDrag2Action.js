@@ -119,6 +119,7 @@
 		}
 
 		function action(method, text) {
+			if (text === "") return;
 			if (inChromeExtension) {
 				if (method === "search") {
 					search(text);
