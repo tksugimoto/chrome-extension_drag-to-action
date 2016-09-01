@@ -56,6 +56,13 @@
 		});
 
 		document.addEventListener("dragend", function (evt) {
+			if (evt.clientX < 0
+				|| evt.clientY < 0
+				|| window.innerWidth < evt.clientX
+				|| window.innerHeight < evt.clientY) {
+				// ウィンドウ外
+				return;
+			}
 			var movedDistanceToRight = evt.screenX - startPositionX;
 			var movedDistanceToBottom = evt.screenY - startPositionY;
 			
