@@ -116,7 +116,7 @@
 		});
 
 		function getAnchor(elem) {
-			while(elem.parentNode) {
+			while(elem) {
 				if (elem.tagName === "A") {
 					return elem;
 				}
