@@ -79,7 +79,7 @@
 					if (target instanceof Text) {
 						// <a>内を選択して選択部分をドラッグした場合、targetはTextのNodeになる
 						action("search", slectedText);
-					} else if (anchor = getAnchor(target)) {
+					} else if ((anchor = getAnchor(target)) && anchor.getAttribute("href") !== "#") {
 						action("open", anchor.href);
 					} else if (target.tagName === "IMG") {
 						action("open", target.src);
@@ -88,7 +88,7 @@
 					}
 				} else {
 					// 上へ動いた
-					if (anchor = getAnchor(target)) {
+					if ((anchor = getAnchor(target)) && anchor.getAttribute("href") !== "#") {
 						action("open-background", anchor.href);
 					}
 				}
