@@ -179,6 +179,8 @@
 		function copy(text) {
 			// BOM (&#65279 = \uFEFF) 削除
 			text = text.replace(/\uFEFF/g, "");
+			// ノーブレークスペース (&#8288 = \u2060) 削除
+			text = text.replace(/\u2060/g, "");
 			textarea.value = text;
 			textarea.select();
 			document.execCommand("copy");
