@@ -1,4 +1,4 @@
-﻿/*
+/*
 	content_scripts / Chrome拡張どちらも対応できるように変更
 */
 (function () {
