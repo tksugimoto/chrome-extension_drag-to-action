@@ -177,6 +177,8 @@
 		textarea.style.top = "-100px";
 		document.body.appendChild(textarea);
 		function copy(text) {
+			// BOM (&#65279 = \uFEFF) 削除
+			text = text.replace(/\uFEFF/g, "");
 			textarea.value = text;
 			textarea.select();
 			document.execCommand("copy");
