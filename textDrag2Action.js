@@ -79,7 +79,7 @@
 					if (target instanceof Text) {
 						// <a>内を選択して選択部分をドラッグした場合、targetはTextのNodeになる
 						action("search", slectedText);
-					} else if ((anchor = getAnchor(target)) && anchor.getAttribute("href") !== "#") {
+					} else if ((anchor = getAnchor(target)) && (anchor = checkAnchor(anchor))) {
 						action("open", anchor.href);
 					} else if (target.tagName === "IMG") {
 						action("open", target.src);
@@ -88,7 +88,7 @@
 					}
 				} else {
 					// 上へ動いた
-					if ((anchor = getAnchor(target)) && anchor.getAttribute("href") !== "#") {
+					if ((anchor = getAnchor(target)) && (anchor = checkAnchor(anchor))) {
 						action("open-background", anchor.href);
 					}
 				}
@@ -123,6 +123,13 @@
 				elem = elem.parentNode;
 			}
 			return null;
+		}
+
+		function checkAnchor(anchor) {
+			const href = anchor.getAttribute("href");
+			if (href === "#") return null;
+			if (/^\s*javascript\s*:\s*void/i.test(href)) return null;
+			return anchor;
 		}
 
 		function action(method, text) {
