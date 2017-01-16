@@ -1,4 +1,5 @@
 /* <a>要素の中にブロックレベル要素があるとドラッグできないので対策 */
+area,
 a * {
 	-webkit-user-drag: element;
 }

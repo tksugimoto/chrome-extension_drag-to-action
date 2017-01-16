@@ -117,7 +117,7 @@
 
 		function getAnchor(elem) {
 			while(elem) {
-				if (elem.tagName === "A") {
+				if (elem.tagName === "A" || elem.tagName === "AREA") {
 					return elem;
 				}
 				elem = elem.parentNode;
