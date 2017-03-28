@@ -2,8 +2,8 @@
 	content_scripts / Chrome拡張どちらも対応できるように変更
 */
 (function () {
-	var inChromeExtension = location.protocol === "chrome-extension:";
-	var isBackgroundPage = inChromeExtension && window.chrome && chrome.extension && (chrome.extension.getBackgroundPage() === window);
+	const inChromeExtension = location.protocol === "chrome-extension:";
+	const isBackgroundPage = inChromeExtension && window.chrome && chrome.extension && (chrome.extension.getBackgroundPage() === window);
 	
 	if (isBackgroundPage) {
 		chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -41,9 +41,9 @@
 			});
 		});
 	} else {
-		var slectedText = "";
-		var startPositionX = 0;
-		var startPositionY = 0;
+		let slectedText = "";
+		let startPositionX = 0;
+		let startPositionY = 0;
 
 		document.addEventListener("dragover", function (evt) {
 			evt.preventDefault();
@@ -63,16 +63,16 @@
 				// ウィンドウ外
 				return;
 			}
-			var movedDistanceToRight = evt.screenX - startPositionX;
-			var movedDistanceToBottom = evt.screenY - startPositionY;
+			const movedDistanceToRight = evt.screenX - startPositionX;
+			const movedDistanceToBottom = evt.screenY - startPositionY;
 			
-			var movedHorizontalDistance = Math.abs(movedDistanceToRight);
-			var movedVerticalDistance = Math.abs(movedDistanceToBottom);
+			const movedHorizontalDistance = Math.abs(movedDistanceToRight);
+			const movedVerticalDistance = Math.abs(movedDistanceToBottom);
 			
 			if (movedVerticalDistance > movedHorizontalDistance) {
 				// （水平方向より）垂直方向へ大きく動いた
-				var target = evt.target;
-				var anchor;
+				const target = evt.target;
+				let anchor;
 				if (movedDistanceToBottom > 0) {
 					// 下へ動いた
 					if (movedDistanceToBottom < 50) return;
@@ -96,8 +96,8 @@
 				if (movedDistanceToRight > 0) {
 					// 右へ動いた
 					if (movedDistanceToRight < 50) return;
-					var target = evt.target;
-					var anchor;
+					const target = evt.target;
+					let anchor;
 					if (target instanceof Text) {
 						action("copy", slectedText);
 					} else if (anchor = getAnchor(target)) {
@@ -157,7 +157,7 @@
 	}
 	if (inChromeExtension) {
 		function search(text, tabId) {
-			var url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
+			const url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
 			open(url, tabId);
 		}
 		function open(url, tabId, active = true) {
@@ -177,7 +177,7 @@
 				});
 			}
 		}
-		var textarea = document.createElement("textarea");
+		const textarea = document.createElement("textarea");
 		// textareaを非表示にするとコピーできない
 		textarea.style.position = "fixed";
 		textarea.style.left = "-100px";
