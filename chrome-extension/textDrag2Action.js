@@ -1,20 +1,25 @@
 /*
 	content_scripts / Chrome拡張どちらも対応できるように変更
 */
-(function () {
-	var inChromeExtension = location.protocol === "chrome-extension:";
-	var isBackgroundPage = inChromeExtension && window.chrome && chrome.extension && (chrome.extension.getBackgroundPage() === window);
+(() => {
+	const inChromeExtension = location.protocol === "chrome-extension:";
+	const isBackgroundPage = inChromeExtension && window.chrome && chrome.extension && (chrome.extension.getBackgroundPage() === window);
 	
 	if (isBackgroundPage) {
-		chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+		chrome.runtime.onMessage.addListener((request, sender) => {
 			if (request.method === "search") {
 				search(request.text, sender.tab.id);
 			} else if (request.method === "copy") {
 				copy(request.text);
 			} else if (request.method === "open") {
-				open(request.text, sender.tab.id);
+				open(request.text, {
+					currentTabId: sender.tab.id
+				});
 			} else if (request.method === "open-background") {
-				open(request.text, sender.tab.id, /* active = */ false);
+				open(request.text, {
+					currentTabId: sender.tab.id,
+					active: false
+				});
 			}
 		});
 		// 読み込み/更新時に既存のタブで実行する
@@ -23,12 +28,12 @@
 				"file:///*",
 				"*://*/*"
 			]
-		}, function(result){
-			result.forEach(function (tab){
+		}, tabs => {
+			tabs.forEach(tab => {
 				chrome.tabs.executeScript(tab.id, {
 					file: "textDrag2Action.js",
 					allFrames: true
-				}, function (result) {
+				}, result => {
 					if (typeof result === "undefined") {
 						console.info("ページが読み込まれていません", tab);
 					} else {
@@ -41,21 +46,21 @@
 			});
 		});
 	} else {
-		var slectedText = "";
-		var startPositionX = 0;
-		var startPositionY = 0;
+		let slectedText = "";
+		let startPositionX = 0;
+		let startPositionY = 0;
 
-		document.addEventListener("dragover", function (evt) {
+		document.addEventListener("dragover", evt => {
 			evt.preventDefault();
 		});
 
-		document.addEventListener("dragstart", function (evt) {
+		document.addEventListener("dragstart", evt => {
 			slectedText = window.getSelection().toString();
 			startPositionX = evt.screenX;
 			startPositionY = evt.screenY;
 		});
 
-		document.addEventListener("dragend", function (evt) {
+		document.addEventListener("dragend", evt => {
 			if (evt.clientX < 0
 				|| evt.clientY < 0
 				|| window.innerWidth < evt.clientX
@@ -63,16 +68,16 @@
 				// ウィンドウ外
 				return;
 			}
-			var movedDistanceToRight = evt.screenX - startPositionX;
-			var movedDistanceToBottom = evt.screenY - startPositionY;
+			const movedDistanceToRight = evt.screenX - startPositionX;
+			const movedDistanceToBottom = evt.screenY - startPositionY;
 			
-			var movedHorizontalDistance = Math.abs(movedDistanceToRight);
-			var movedVerticalDistance = Math.abs(movedDistanceToBottom);
+			const movedHorizontalDistance = Math.abs(movedDistanceToRight);
+			const movedVerticalDistance = Math.abs(movedDistanceToBottom);
 			
 			if (movedVerticalDistance > movedHorizontalDistance) {
 				// （水平方向より）垂直方向へ大きく動いた
-				var target = evt.target;
-				var anchor;
+				const target = evt.target;
+				let anchor;
 				if (movedDistanceToBottom > 0) {
 					// 下へ動いた
 					if (movedDistanceToBottom < 50) return;
@@ -96,8 +101,8 @@
 				if (movedDistanceToRight > 0) {
 					// 右へ動いた
 					if (movedDistanceToRight < 50) return;
-					var target = evt.target;
-					var anchor;
+					const target = evt.target;
+					let anchor;
 					if (target instanceof Text) {
 						action("copy", slectedText);
 					} else if (anchor = getAnchor(target)) {
@@ -115,7 +120,7 @@
 			}
 		});
 
-		function getAnchor(elem) {
+		const getAnchor = elem => {
 			while(elem) {
 				if (elem.tagName === "A" || elem.tagName === "AREA") {
 					return elem;
@@ -123,16 +128,16 @@
 				elem = elem.parentNode;
 			}
 			return null;
-		}
+		};
 
-		function checkAnchor(anchor) {
+		const checkAnchor = anchor => {
 			const href = anchor.getAttribute("href");
 			if (href === "#") return null;
 			if (/^\s*javascript\s*:\s*void/i.test(href)) return null;
 			return anchor;
-		}
+		};
 
-		function action(method, text) {
+		const action = (method, text) => {
 			if (text === "") return;
 			if (inChromeExtension) {
 				if (method === "search") {
@@ -142,7 +147,9 @@
 				} else if (method === "open") {
 					open(text);
 				} else if (method === "open-background") {
-					open(text, null, /* active = */ false);
+					open(text, {
+						active: false
+					});
 				}
 			} else {
 				// 拡張が再読み込みされた場合エラーになるので捕捉
@@ -153,16 +160,29 @@
 					});
 				} catch (e) {}
 			}
-		}
+		};
 	}
 	if (inChromeExtension) {
-		function search(text, tabId) {
-			var url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
-			open(url, tabId);
+		function search(text, currentTabId) {
+			const queryObject = {
+				hl: "ja",
+				complete: 0,
+				q: text
+			};
+			const querys = Object.entries(queryObject).map(([key, value]) => {
+				return `${key}=${encodeURIComponent(value)}`;
+			});
+			const queryString = querys.join("&");
+			const url = `https://www.google.co.jp/search?${queryString}`;
+
+			open(url, {currentTabId});
 		}
-		function open(url, tabId, active = true) {
-			if (typeof tabId !== "number") {
-				chrome.tabs.getCurrent(function (tab) {
+		function open(url, {
+			currentTabId,
+			active = true
+		} = {}) {
+			if (typeof currentTabId !== "number") {
+				chrome.tabs.getCurrent(tab => {
 					chrome.tabs.create({
 						url: url,
 						active: !!active,
@@ -173,11 +193,11 @@
 				chrome.tabs.create({
 					url: url,
 					active: !!active,
-					openerTabId: tabId
+					openerTabId: currentTabId
 				});
 			}
 		}
-		var textarea = document.createElement("textarea");
+		const textarea = document.createElement("textarea");
 		// textareaを非表示にするとコピーできない
 		textarea.style.position = "fixed";
 		textarea.style.left = "-100px";
