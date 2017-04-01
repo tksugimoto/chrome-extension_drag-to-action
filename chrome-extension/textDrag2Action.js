@@ -164,7 +164,17 @@
 	}
 	if (inChromeExtension) {
 		function search(text, currentTabId) {
-			const url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
+			const queryObject = {
+				hl: "ja",
+				complete: 0,
+				q: text
+			};
+			const querys = Object.entries(queryObject).map(([key, value]) => {
+				return `${key}=${encodeURIComponent(value)}`;
+			});
+			const queryString = querys.join("&");
+			const url = `https://www.google.co.jp/search?${queryString}`;
+
 			open(url, {currentTabId});
 		}
 		function open(url, {
