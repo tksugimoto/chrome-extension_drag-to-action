@@ -11,8 +11,7 @@
 	"permissions": [
 		"file:///*",
 		"*://*/*",
-		"notifications",
-		"tabs"
+		"notifications"
 	],
 
 	"background": {
