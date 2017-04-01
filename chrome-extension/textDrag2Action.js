@@ -1,12 +1,12 @@
 /*
 	content_scripts / Chrome拡張どちらも対応できるように変更
 */
-(function () {
+(() => {
 	const inChromeExtension = location.protocol === "chrome-extension:";
 	const isBackgroundPage = inChromeExtension && window.chrome && chrome.extension && (chrome.extension.getBackgroundPage() === window);
 	
 	if (isBackgroundPage) {
-		chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			if (request.method === "search") {
 				search(request.text, sender.tab.id);
 			} else if (request.method === "copy") {
@@ -23,12 +23,12 @@
 				"file:///*",
 				"*://*/*"
 			]
-		}, function(result){
-			result.forEach(function (tab){
+		}, result => {
+			result.forEach(tab => {
 				chrome.tabs.executeScript(tab.id, {
 					file: "textDrag2Action.js",
 					allFrames: true
-				}, function (result) {
+				}, result => {
 					if (typeof result === "undefined") {
 						console.info("ページが読み込まれていません", tab);
 					} else {
@@ -45,17 +45,17 @@
 		let startPositionX = 0;
 		let startPositionY = 0;
 
-		document.addEventListener("dragover", function (evt) {
+		document.addEventListener("dragover", evt => {
 			evt.preventDefault();
 		});
 
-		document.addEventListener("dragstart", function (evt) {
+		document.addEventListener("dragstart", evt => {
 			slectedText = window.getSelection().toString();
 			startPositionX = evt.screenX;
 			startPositionY = evt.screenY;
 		});
 
-		document.addEventListener("dragend", function (evt) {
+		document.addEventListener("dragend", evt => {
 			if (evt.clientX < 0
 				|| evt.clientY < 0
 				|| window.innerWidth < evt.clientX
@@ -115,7 +115,7 @@
 			}
 		});
 
-		function getAnchor(elem) {
+		const getAnchor = elem => {
 			while(elem) {
 				if (elem.tagName === "A" || elem.tagName === "AREA") {
 					return elem;
@@ -123,16 +123,16 @@
 				elem = elem.parentNode;
 			}
 			return null;
-		}
+		};
 
-		function checkAnchor(anchor) {
+		const checkAnchor = anchor => {
 			const href = anchor.getAttribute("href");
 			if (href === "#") return null;
 			if (/^\s*javascript\s*:\s*void/i.test(href)) return null;
 			return anchor;
-		}
+		};
 
-		function action(method, text) {
+		const action = (method, text) => {
 			if (text === "") return;
 			if (inChromeExtension) {
 				if (method === "search") {
@@ -153,7 +153,7 @@
 					});
 				} catch (e) {}
 			}
-		}
+		};
 	}
 	if (inChromeExtension) {
 		function search(text, tabId) {
@@ -162,7 +162,7 @@
 		}
 		function open(url, tabId, active = true) {
 			if (typeof tabId !== "number") {
-				chrome.tabs.getCurrent(function (tab) {
+				chrome.tabs.getCurrent(tab => {
 					chrome.tabs.create({
 						url: url,
 						active: !!active,
