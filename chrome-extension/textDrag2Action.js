@@ -12,9 +12,14 @@
 			} else if (request.method === "copy") {
 				copy(request.text);
 			} else if (request.method === "open") {
-				open(request.text, sender.tab.id);
+				open(request.text, {
+					currentTabId: sender.tab.id
+				});
 			} else if (request.method === "open-background") {
-				open(request.text, sender.tab.id, /* active = */ false);
+				open(request.text, {
+					currentTabId: sender.tab.id,
+					active: false
+				});
 			}
 		});
 		// 読み込み/更新時に既存のタブで実行する
@@ -142,7 +147,9 @@
 				} else if (method === "open") {
 					open(text);
 				} else if (method === "open-background") {
-					open(text, null, /* active = */ false);
+					open(text, {
+						active: false
+					});
 				}
 			} else {
 				// 拡張が再読み込みされた場合エラーになるので捕捉
@@ -158,10 +165,15 @@
 	if (inChromeExtension) {
 		function search(text, tabId) {
 			const url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
-			open(url, tabId);
+			open(url, {
+				currentTabId: tabId
+			});
 		}
-		function open(url, tabId, active = true) {
-			if (typeof tabId !== "number") {
+		function open(url, {
+			currentTabId,
+			active = true
+		} = {}) {
+			if (typeof currentTabId !== "number") {
 				chrome.tabs.getCurrent(tab => {
 					chrome.tabs.create({
 						url: url,
@@ -173,7 +185,7 @@
 				chrome.tabs.create({
 					url: url,
 					active: !!active,
-					openerTabId: tabId
+					openerTabId: currentTabId
 				});
 			}
 		}
