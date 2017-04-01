@@ -6,7 +6,7 @@
 	const isBackgroundPage = inChromeExtension && window.chrome && chrome.extension && (chrome.extension.getBackgroundPage() === window);
 	
 	if (isBackgroundPage) {
-		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+		chrome.runtime.onMessage.addListener((request, sender) => {
 			if (request.method === "search") {
 				search(request.text, sender.tab.id);
 			} else if (request.method === "copy") {
@@ -23,8 +23,8 @@
 				"file:///*",
 				"*://*/*"
 			]
-		}, result => {
-			result.forEach(tab => {
+		}, tabs => {
+			tabs.forEach(tab => {
 				chrome.tabs.executeScript(tab.id, {
 					file: "textDrag2Action.js",
 					allFrames: true
