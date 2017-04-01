@@ -163,11 +163,9 @@
 		};
 	}
 	if (inChromeExtension) {
-		function search(text, tabId) {
+		function search(text, currentTabId) {
 			const url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
-			open(url, {
-				currentTabId: tabId
-			});
+			open(url, {currentTabId});
 		}
 		function open(url, {
 			currentTabId,
