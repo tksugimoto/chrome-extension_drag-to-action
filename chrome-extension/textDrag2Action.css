@@ -6,5 +6,5 @@ a * {
 
 /* user-select: text; だとドラッグできないので対策 */
 a {
-	user-select: initial;
+	user-select: initial !important;
 }
