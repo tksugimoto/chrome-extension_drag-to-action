@@ -105,7 +105,7 @@
 					let anchor;
 					if (target instanceof Text) {
 						action('copy', slectedText);
-					} else if (anchor = getAnchor(target)) {
+					} else if ((anchor = getAnchor(target))) {
 						action('copy', anchor.href);
 					} else if (target.tagName === 'IMG') {
 						if (target.src.startsWith('data:image/')) {
