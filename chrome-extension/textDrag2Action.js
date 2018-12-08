@@ -13,12 +13,12 @@
 				copy(request.text);
 			} else if (request.method === 'open') {
 				open(request.text, {
-					currentTabId: sender.tab.id
+					currentTabId: sender.tab.id,
 				});
 			} else if (request.method === 'open-background') {
 				open(request.text, {
 					currentTabId: sender.tab.id,
-					active: false
+					active: false,
 				});
 			}
 		});
@@ -26,20 +26,20 @@
 		chrome.tabs.query({
 			url: [
 				'file:///*',
-				'*://*/*'
-			]
+				'*://*/*',
+			],
 		}, tabs => {
 			tabs.forEach(tab => {
 				chrome.tabs.executeScript(tab.id, {
 					file: 'textDrag2Action.js',
-					allFrames: true
+					allFrames: true,
 				}, result => {
 					if (typeof result === 'undefined') {
 						console.info('ページが読み込まれていません', tab);
 					} else {
 						chrome.tabs.insertCSS(tab.id, {
 							file: 'textDrag2Action.css',
-							allFrames: true
+							allFrames: true,
 						})
 					}
 				});
@@ -148,7 +148,7 @@
 					open(text);
 				} else if (method === 'open-background') {
 					open(text, {
-						active: false
+						active: false,
 					});
 				}
 			} else {
@@ -156,7 +156,7 @@
 				try {
 					chrome.runtime.sendMessage({
 						method: method,
-						text: text
+						text: text,
 					});
 				} catch (e) {}
 			}
@@ -167,7 +167,7 @@
 			const queryObject = {
 				hl: 'ja',
 				complete: 0,
-				q: text
+				q: text,
 			};
 			const querys = Object.entries(queryObject).map(([key, value]) => {
 				return `${key}=${encodeURIComponent(value)}`;
@@ -179,21 +179,21 @@
 		}
 		function open(url, {
 			currentTabId,
-			active = true
+			active = true,
 		} = {}) {
 			if (typeof currentTabId !== 'number') {
 				chrome.tabs.getCurrent(tab => {
 					chrome.tabs.create({
 						url: url,
 						active: !!active,
-						openerTabId: tab.id
+						openerTabId: tab.id,
 					});
 				});
 			} else {
 				chrome.tabs.create({
 					url: url,
 					active: !!active,
-					openerTabId: currentTabId
+					openerTabId: currentTabId,
 				});
 			}
 		}
@@ -216,7 +216,7 @@
 				title: 'コピー完了',
 				message: text,
 				type: 'basic',
-				iconUrl: '/icon/icon.png'
+				iconUrl: '/icon/icon.png',
 			});
 		}
 		chrome.notifications.onClicked.addListener(notificationId => {
