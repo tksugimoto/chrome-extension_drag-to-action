@@ -40,7 +40,7 @@
 						chrome.tabs.insertCSS(tab.id, {
 							file: 'textDrag2Action.css',
 							allFrames: true,
-						})
+						});
 					}
 				});
 			});
