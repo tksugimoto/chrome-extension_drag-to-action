@@ -3,3 +3,8 @@ area,
 a * {
 	-webkit-user-drag: element;
 }
+
+/* user-select: text; だとドラッグできないので対策 */
+a {
+	user-select: initial !important;
+}
