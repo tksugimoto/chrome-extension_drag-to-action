@@ -155,8 +155,8 @@
 				// 拡張が再読み込みされた場合エラーになるので捕捉
 				try {
 					chrome.runtime.sendMessage({
-						method: method,
-						text: text,
+						method,
+						text,
 					});
 				} catch (e) {}
 			}
@@ -184,14 +184,14 @@
 			if (typeof currentTabId !== 'number') {
 				chrome.tabs.getCurrent(tab => {
 					chrome.tabs.create({
-						url: url,
+						url,
 						active: !!active,
 						openerTabId: tab.id,
 					});
 				});
 			} else {
 				chrome.tabs.create({
-					url: url,
+					url,
 					active: !!active,
 					openerTabId: currentTabId,
 				});
