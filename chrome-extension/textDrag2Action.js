@@ -8,15 +8,15 @@
 	if (isBackgroundPage) {
 		chrome.runtime.onMessage.addListener((request, sender) => {
 			if (request.method === 'search') {
-				search(request.text, sender.tab.id);
+				functions.search(request.text, sender.tab.id);
 			} else if (request.method === 'copy') {
-				copy(request.text);
+				functions.copy(request.text);
 			} else if (request.method === 'open') {
-				open(request.text, {
+				functions.open(request.text, {
 					currentTabId: sender.tab.id,
 				});
 			} else if (request.method === 'open-background') {
-				open(request.text, {
+				functions.open(request.text, {
 					currentTabId: sender.tab.id,
 					active: false,
 				});
@@ -141,13 +141,13 @@
 			if (text === '') return;
 			if (inChromeExtension) {
 				if (method === 'search') {
-					search(text);
+					functions.search(text);
 				} else if (method === 'copy') {
-					copy(text);
+					functions.copy(text);
 				} else if (method === 'open') {
-					open(text);
+					functions.open(text);
 				} else if (method === 'open-background') {
-					open(text, {
+					functions.open(text, {
 						active: false,
 					});
 				}
@@ -162,8 +162,9 @@
 			}
 		};
 	}
+	const functions = {};
 	if (inChromeExtension) {
-		function search(text, currentTabId) {
+		const search = (text, currentTabId) => {
 			const queryObject = {
 				hl: 'ja',
 				complete: 0,
@@ -176,11 +177,11 @@
 			const url = `https://www.google.co.jp/search?${queryString}`;
 
 			open(url, {currentTabId});
-		}
-		function open(url, {
+		};
+		const open = (url, {
 			currentTabId,
 			active = true,
-		} = {}) {
+		} = {}) => {
 			if (typeof currentTabId !== 'number') {
 				chrome.tabs.getCurrent(tab => {
 					chrome.tabs.create({
@@ -196,14 +197,14 @@
 					openerTabId: currentTabId,
 				});
 			}
-		}
+		};
 		const textarea = document.createElement('textarea');
 		// textareaを非表示にするとコピーできない
 		textarea.style.position = 'fixed';
 		textarea.style.left = '-100px';
 		textarea.style.top = '-100px';
 		document.body.appendChild(textarea);
-		function copy(text) {
+		const copy = (text) => {
 			// BOM (&#65279 = \uFEFF) 削除
 			text = text.replace(/\uFEFF/g, '');
 			// ノーブレークスペース (&#8288 = \u2060) 削除
@@ -218,9 +219,12 @@
 				type: 'basic',
 				iconUrl: '/icon/icon.png',
 			});
-		}
+		};
 		chrome.notifications.onClicked.addListener(notificationId => {
 			chrome.notifications.clear(notificationId);
 		});
+		functions.search = search;
+		functions.open = open;
+		functions.copy = copy;
 	}
 })();
