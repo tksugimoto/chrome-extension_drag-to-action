@@ -213,11 +213,17 @@
 			textarea.select();
 			document.execCommand('copy');
 
+			/** 通知を何秒後に削除するか [s] */
+			const notificationTimeoutSec = 5;
 			chrome.notifications.create({
 				title: 'コピー完了',
 				message: text,
 				type: 'basic',
 				iconUrl: '/icon/icon.png',
+			}, notificationId => {
+				setTimeout(() => {
+					chrome.notifications.clear(notificationId);
+				}, notificationTimeoutSec * 1000);
 			});
 		};
 		chrome.notifications.onClicked.addListener(notificationId => {
