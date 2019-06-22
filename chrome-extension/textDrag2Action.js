@@ -133,7 +133,7 @@
 		const checkAnchor = anchor => {
 			const href = anchor.getAttribute('href');
 			if (href === '#') return null;
-			if (/^\s*javascript\s*:\s*void/i.test(href)) return null;
+			if (/^\s*javascript\s*:/i.test(href)) return null;
 			return anchor;
 		};
 
