@@ -86,7 +86,7 @@
 						action('search', slectedText);
 					} else if ((anchor = getAnchor(target)) && (anchor = checkAnchor(anchor))) {
 						action('open', anchor.href);
-					} else if (target.tagName === 'IMG') {
+					} else if (target.tagName?.toUpperCase() === 'IMG') {
 						action('open', target.src);
 					} else if (/\S/.test(slectedText)) {
 						action('search', slectedText);
@@ -107,7 +107,7 @@
 						action('copy', slectedText);
 					} else if ((anchor = getAnchor(target))) {
 						action('copy', anchor.href);
-					} else if (target.tagName === 'IMG') {
+					} else if (target.tagName?.toUpperCase() === 'IMG') {
 						if (target.src.startsWith('data:image/')) {
 							// Data URIは長すぎてコピーすると重いので何もしない
 							return;
@@ -122,7 +122,7 @@
 
 		const getAnchor = elem => {
 			while(elem) {
-				if (elem.tagName === 'A' || elem.tagName === 'AREA') {
+				if (elem.tagName?.toUpperCase() === 'A' || elem.tagName?.toUpperCase() === 'AREA') {
 					return elem;
 				}
 				elem = elem.parentNode;
