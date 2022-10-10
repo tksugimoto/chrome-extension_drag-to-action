@@ -3,7 +3,7 @@
 */
 (() => {
 	const inChromeExtension = location.protocol === 'chrome-extension:';
-	const isBackgroundPage = inChromeExtension && window.chrome && chrome.extension && (chrome.extension.getBackgroundPage() === window);
+	const isBackgroundPage = inChromeExtension && !!this?.registration?.scope;
 
 	if (isBackgroundPage) {
 		chrome.runtime.onMessage.addListener((request, sender) => {
@@ -30,16 +30,26 @@
 			],
 		}, tabs => {
 			tabs.forEach(tab => {
-				chrome.tabs.executeScript(tab.id, {
-					file: 'textDrag2Action.js',
-					allFrames: true,
+				chrome.scripting.executeScript({
+					files: [
+						'textDrag2Action.js',
+					],
+					target: {
+						tabId: tab.id,
+						allFrames: true,
+					},
 				}, result => {
 					if (typeof result === 'undefined') {
 						console.info('ページが読み込まれていません', tab);
 					} else {
-						chrome.tabs.insertCSS(tab.id, {
-							file: 'textDrag2Action.css',
-							allFrames: true,
+						chrome.scripting.insertCSS({
+							files: [
+								'textDrag2Action.css',
+							],
+							target: {
+								tabId: tab.id,
+								allFrames: true,
+							},
 						});
 					}
 				});
@@ -198,39 +208,40 @@
 				});
 			}
 		};
-		const textarea = document.createElement('textarea');
-		// textareaを非表示にするとコピーできない
-		textarea.style.position = 'fixed';
-		textarea.style.left = '-100px';
-		textarea.style.top = '-100px';
-		document.body.appendChild(textarea);
-		const copy = (text) => {
-			// BOM (&#65279 = \uFEFF) 削除
-			text = text.replace(/\uFEFF/g, '');
-			// ノーブレークスペース (&#8288 = \u2060) 削除
-			text = text.replace(/\u2060/g, '');
-			textarea.value = text;
-			textarea.select();
-			document.execCommand('copy');
+		// FIXME: service worker では document が無い
+		// const textarea = document.createElement('textarea');
+		// // textareaを非表示にするとコピーできない
+		// textarea.style.position = 'fixed';
+		// textarea.style.left = '-100px';
+		// textarea.style.top = '-100px';
+		// document.body.appendChild(textarea);
+		// const copy = (text) => {
+		// 	// BOM (&#65279 = \uFEFF) 削除
+		// 	text = text.replace(/\uFEFF/g, '');
+		// 	// ノーブレークスペース (&#8288 = \u2060) 削除
+		// 	text = text.replace(/\u2060/g, '');
+		// 	textarea.value = text;
+		// 	textarea.select();
+		// 	document.execCommand('copy');
 
-			/** 通知を何秒後に削除するか [s] */
-			const notificationTimeoutSec = 5;
-			chrome.notifications.create({
-				title: 'コピー完了',
-				message: text,
-				type: 'basic',
-				iconUrl: '/icon/icon.png',
-			}, notificationId => {
-				setTimeout(() => {
-					chrome.notifications.clear(notificationId);
-				}, notificationTimeoutSec * 1000);
-			});
-		};
-		chrome.notifications.onClicked.addListener(notificationId => {
-			chrome.notifications.clear(notificationId);
-		});
+		// 	/** 通知を何秒後に削除するか [s] */
+		// 	const notificationTimeoutSec = 5;
+		// 	chrome.notifications.create({
+		// 		title: 'コピー完了',
+		// 		message: text,
+		// 		type: 'basic',
+		// 		iconUrl: '/icon/icon.png',
+		// 	}, notificationId => {
+		// 		setTimeout(() => {
+		// 			chrome.notifications.clear(notificationId);
+		// 		}, notificationTimeoutSec * 1000);
+		// 	});
+		// };
+		// chrome.notifications.onClicked.addListener(notificationId => {
+		// 	chrome.notifications.clear(notificationId);
+		// });
 		functions.search = search;
 		functions.open = open;
-		functions.copy = copy;
+		// functions.copy = copy;
 	}
 })();

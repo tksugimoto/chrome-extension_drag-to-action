@@ -1,23 +1,24 @@
 {
 	"name": "テキストを選択→ドラッグで検索",
 	"version": "0.1",
-	"manifest_version": 2,
+	"manifest_version": 3,
 
 	"description": "",
 
 	"icons": {
 		"128": "/icon/icon.png"
 	},
-	"permissions": [
+	"host_permissions": [
 		"file:///*",
-		"*://*/*",
+		"*://*/*"
+	],
+	"permissions": [
+		"scripting",
 		"notifications"
 	],
 
 	"background": {
-		"scripts": [
-			"textDrag2Action.js"
-		]
+		"service_worker": "textDrag2Action.js"
 	},
 
 	"content_scripts": [
