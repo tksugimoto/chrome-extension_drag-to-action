@@ -23,7 +23,7 @@
 			}
 		});
 		// 読み込み/更新時に既存のタブで実行する
-		chrome.tabs.query({
+		const setupForAllTabs = () => chrome.tabs.query({
 			url: [
 				'file:///*',
 				'*://*/*',
@@ -55,6 +55,8 @@
 				});
 			});
 		});
+
+		chrome.runtime.onInstalled.addListener(setupForAllTabs);
 	} else {
 		let slectedText = '';
 		let startPositionX = 0;
